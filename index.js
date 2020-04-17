@@ -72,7 +72,7 @@ const cmd = yargs
 
     var processing_changes = false
     async function processChangedFiles () {
-      console.log('processChangedFiles', files_changed)
+      // console.log('processChangedFiles', files_changed)
 
       const _files = files_changed.splice(0)
 
