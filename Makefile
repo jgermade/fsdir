@@ -11,3 +11,6 @@ watch:
 		--when "{,**/}*.js" "make js" \
 		--when "{,**/}*.json" "make json" \
 		--then "echo 'all when detected has finished'"
+
+publish:
+	npm publish --access public
