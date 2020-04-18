@@ -2,7 +2,7 @@
   "name": "@kilt/watchdir",
   "version": "0.1.5",
   "description": "Single directory files change watcher",
-  "main": "index.js",
+  "main": "watchdir.js",
   "scripts": {
     "test": "make test"
   },

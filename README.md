@@ -14,7 +14,7 @@ npx watchdir ./src \
   --run "echo 'all when detected has finished'"
 ```
 
-### API JavaScript
+### JavaScript API
 ``` js
 import WatchDir from '@kilt/watchdir'
 

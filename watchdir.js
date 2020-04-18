@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 
 const chokidar = require('chokidar')
 const minimatch = require('minimatch')
