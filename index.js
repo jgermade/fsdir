@@ -39,6 +39,10 @@ function _reduceWhen (when_list) {
 }
 
 const cmd = yargs
+  .option('dir', {
+    alias: 'd',
+    default: '.',
+  })
   .option('when', {
     type: 'array',
     nargs: 2,
@@ -50,68 +54,65 @@ const cmd = yargs
 
 !(function (argv) {
 
-  const cwd = argv.cwd || '.'
-    // console.log(argv)
-    console.log(`${yellow('watching')}: ${cwd}`)
+  const cwd = argv.dir || '.'
+  console.log(`${yellow('watching')}: ${cwd}`)
 
-    const files_changed = []
-    const when = _reduceWhen(argv.when)
+  const files_changed = []
+  const when = _reduceWhen(argv.when)
 
-    async function _runCommands (commands) {
-      const next = commands.shift()
+  async function _runCommands (commands) {
+    const next = commands.shift()
 
-      if (!next) return
+    if (!next) return
 
-      var _start = performance.now()
-      console.log(`${magenta('running')} ${next.command}`)
-      await runCommand(next.command)
-      console.log(`${cyan('finished')} ${next.command} ${black(_getmSeconds(performance.now() - _start))}`)
+    var _start = performance.now()
+    console.log(`${magenta('running')} ${next.command}`)
+    await runCommand(next.command)
+    console.log(`${cyan('finished')} ${next.command} ${black(_getmSeconds(performance.now() - _start))}`)
 
-      await _runCommands(commands)
+    await _runCommands(commands)
+  }
+
+  var processing_changes = false
+  async function processChangedFiles () {
+    const _files = files_changed.splice(0)
+
+    if (!_files.length) return
+
+    const commands = when
+      .filter( (_pattern) => _files.some(_pattern.match) )
+
+    if (argv.then) commands.push({ command: argv.then })
+
+    console.log(`\n${ yellow('changed') }:\n ${_files.join('\n ') }`)
+
+    if (!commands.length) {
+      console.log(black('nothing to do'))
+      return
     }
 
-    var processing_changes = false
-    async function processChangedFiles () {
-      console.log('processChangedFiles', files_changed)
+    processing_changes = true
+    await _runCommands(commands)
+    processing_changes = false
 
-      const _files = files_changed.splice(0)
+    if (files_changed.length) await processChangedFiles()
 
-      if (!_files.length) return
+    console.log(``)
+  }
 
-      const commands = when
-        .filter( (_pattern) => _files.some(_pattern.match) )
-
-      if (argv.then) commands.push({ command: argv.then })
-
-      console.log(`\n${ yellow('changed') }:\n ${_files.join('\n ') }`)
-
-      if (!commands.length) {
-        console.log(black('nothing to do'))
-        return
+  chokidar
+    .watch('.', {
+      cwd,
+      ignoreInitial: true,
+    })
+    .on('all', (event, path) => {
+      if (files_changed.indexOf(path) === -1) {
+        files_changed.push(path)
       }
 
-      processing_changes = true
-      await _runCommands(commands)
-      processing_changes = false
-
-      if (files_changed.length) await processChangedFiles()
-
-      console.log(``)
-    }
-
-    chokidar
-      .watch('.', {
-        cwd: cwd,
-        ignoreInitial: true,
-      })
-      .on('all', (event, path) => {
-        if (files_changed.indexOf(path) === -1) {
-          files_changed.push(path)
-        }
-
-        if (!processing_changes) {
-          processChangedFiles().catch(console.error)
-        }
-      })
+      if (!processing_changes) {
+        processChangedFiles().catch(console.error)
+      }
+    })
 
 })(cmd.argv)
