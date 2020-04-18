@@ -32,6 +32,10 @@ function _reduceWhen (when_list) {
 }
 
 const { argv } = yargs
+  .option('dir', {
+    alias: 'd',
+    default: '.',
+  })
   .option('when', {
     alias: 'w',
     type: 'array',
