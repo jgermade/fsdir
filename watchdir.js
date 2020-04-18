@@ -12,17 +12,18 @@ class WatchDir extends Watcher {
       options = cwd
       cwd = options.dir || '.'
     }
+    super(options)
     this.cwd = cwd
     this.options = options
-
-    super(options)
 
     if (!options.manual_boot) this.watch(cwd)
   }
 
   when (pattern, cbFn) {
+    var matches = minimatch.filter(pattern)
     this.when_queue.push({
-      when: minimatch.filter(pattern),
+      pattern,
+      when: (files_changed) => files_changed.some( (file) => matches(file) ),
       cbFn,
     })
   }
@@ -41,13 +42,9 @@ class WatchDir extends Watcher {
           files_changed.push(path)
         }
 
-        if (!processing_changes) {
-          this
-            .process( (when) => {
-
-            })
-            .catch(console.error)
-        }
+        this
+          .process(files_changed)
+          .catch(console.error)
       })
   }
 

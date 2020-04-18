@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 
-const { promisify } = require('util')
 const { performance } = require('perf_hooks')
-const { exec } = require('child_process')
 
 const yargs = require('yargs')
-
 const { yellow, cyan, magenta, black } = require('chalk')
 
+const { getmSeconds, runCommand } = require('./utils')
 const WatchDir = require('./watchdir')
 
-const runCommand = promisify(exec)
-
-console.log('WatchDir', WatchDir)
+async function _runCommand (command) {
+  var _start = performance.now()
+  console.log(`\n${magenta('running')} ${command}`)
+  await runCommand(command)
+  console.log(`${cyan('finished')} ${command} ${black(getmSeconds(performance.now() - _start))}`)
+}
 
 function _reduceWhen (when_list) {
   const when = []
@@ -37,8 +38,8 @@ const { argv } = yargs
     nargs: 2,
     default: [],
   })
-  .option('then', {
-    alias: 't',
+  .option('run', {
+    alias: 'r',
     type: 'array',
     nargs: 1,
     default: [],
@@ -49,13 +50,11 @@ const watch = new WatchDir(cwd)
 
 _reduceWhen(argv.when)
   .forEach( (_) => {
-    watch.when(_.patten, async () => {
-      return await runCommand(_.command)
-    })
+    watch.when(_.pattern, () => _runCommand(_.command) )
   })
 
-argv.then.forEach( (command) => {
-  watch.then(async () => {
-    return await runCommand(command)
-  })
+argv.run.forEach( (command) => {
+  watch.run(() => _runCommand(command))
 })
+
+console.log(`\n${yellow('watching')}: ${cwd}`)
