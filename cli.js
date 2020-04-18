@@ -11,7 +11,13 @@ const WatchDir = require('./watchdir')
 async function _runCommand (command) {
   var _start = performance.now()
   console.log(`\n${magenta('running')} ${command}`)
-  await runCommand(command)
+  await command[0] === '@'
+    ? runCommand(command.substr(1), false, false)
+    : (
+      command[0] === '-'
+        ? runCommand(command.substr(1), true, false)
+        : runCommand(command)
+    )
   console.log(`${cyan('finished')} ${command} ${black(getmSeconds(performance.now() - _start))}`)
 }
 
