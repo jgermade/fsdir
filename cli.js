@@ -49,7 +49,7 @@ const { argv } = yargs
     default: [],
   })
 
-const cwd = argv.cwd || '.'
+const cwd = argv.dir || '.'
 const watch = new WatchDir(cwd)
 
 _reduceWhen(argv.when)
