@@ -8,7 +8,7 @@ npm i -D @kilt/watchdir
 
 ### Running CLI
 ``` sh
-npx watchdir --dir ./src \
+npx watchdir -d ./src \
   --when "{,**/}*.js" "make js" \
   --when "{,**/}*.sass" "make css" \
   --run "echo 'all when detected has finished'"
