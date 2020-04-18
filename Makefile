@@ -1,7 +1,7 @@
 SHELL := env PATH=$(shell npm bin):$(PATH) /bin/bash
 
 js:
-	@echo "building json"
+	@echo "building js"
 
 json:
 	@echo "building json"
