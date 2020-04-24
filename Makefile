@@ -24,8 +24,7 @@ watch:
 		--run "echo 'all when detected has finished'"
 
 publish:
-	git pull --tags
+	git pull origin $(git_branch) --tags
 	npm version ${NPM_VERSION}
-	git push origin $(git_branch)
-	git push --tags
+	git push origin $(git_branch) --tags
 	npm publish --access public
