@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/kiltjs/watchdir#readme",
   "dependencies": {
-    "chalk": "^4.0.0",
-    "chokidar": "^3.3.1",
-    "minimatch": "^3.0.4",
-    "yargs": "^15.3.1"
+    "chalk": "4.0.0",
+    "chokidar": "3.3.1",
+    "micromatch": "4.0.2",
+    "yargs": "15.3.1"
   }
 }

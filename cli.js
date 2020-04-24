@@ -8,13 +8,6 @@ const { yellow, cyan, magenta, black } = require('chalk')
 const { getmSeconds, runCommand } = require('./utils')
 const WatchDir = require('./watchdir')
 
-async function _runCommand (command) {
-  var _start = performance.now()
-  console.log(`\n${magenta('running')} ${command}`)
-  await runCommand(command)
-  console.log(`${cyan('finished')} ${command} ${black(getmSeconds(performance.now() - _start))}`)
-}
-
 function _reduceWhen (when_list) {
   const when = []
   var current_when = null
@@ -48,6 +41,13 @@ const { argv } = yargs
     nargs: 1,
     default: [],
   })
+  .option('verbose', {
+    alias: 'v',
+    type: 'boolean',
+    nargs: 1,
+    // default: ( process.env.MAKEFLAGS && /s/.test(process.env.MAKEFLAGS) ? false : true ),
+    default: true,
+  })
 
 const cwd = argv.dir || '.'
 const watch = new WatchDir(cwd)
@@ -57,8 +57,15 @@ _reduceWhen(argv.when)
     watch.when(_.pattern, () => _runCommand(_.command) )
   })
 
+async function _runCommand (command) {
+  var _start = performance.now()
+  argv.verbose && console.log(`\n${magenta('running')} ${command}`)
+  await runCommand(command)
+  argv.verbose && console.log(`${cyan('finished')} ${command} ${black(getmSeconds(performance.now() - _start))}`)
+}
+
 argv.run.forEach( (command) => {
   watch.run(() => _runCommand(command))
 })
 
-console.log(`\n${yellow('watching')}: ${cwd}`)
+argv.verbose && console.log(`\n${yellow('watching')}: ${cwd}`)

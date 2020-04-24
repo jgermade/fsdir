@@ -1,6 +1,9 @@
 #!make
 SHELL := env PATH=$(shell npm bin):$(PATH) /bin/bash
 
+.PHONY: watch
+.SILENT:
+
 git_branch := $(shell git rev-parse --abbrev-ref HEAD)
 
 ifndef NPM_VERSION
@@ -14,10 +17,11 @@ json:
 	@echo "building json"
 
 watch:
-	./watchdir src \
-		--when "{,**/}*.js" "make js" \
+	./watch -d . \
+		--when "{,**/}*; !{,**/}*.json" "make js" \
 		--when "{,**/}*.json" "make json" \
-		--then "echo 'all when detected has finished'"
+		\
+		--run "echo 'all when detected has finished'"
 
 publish:
 	git pull --tags
