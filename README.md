@@ -1,9 +1,9 @@
 
-## @fs1/watchdir
+## @fsglob/watchdir
 
 ### Install
 ``` sh
-npm i -D @fs1/watchdir
+npm i -D @fsglob/watchdir
 ```
 
 ### Running CLI
@@ -16,7 +16,7 @@ npx watchdir -d ./src \
 
 ### JavaScript API
 ``` js
-import WatchDir from '@fs1/watchdir'
+import WatchDir from '@fsglob/watchdir'
 
 new WatchDir('./src')
   .when('{,**/}* ; !{,**/}*.sass', () => console.log('js files changed') )
