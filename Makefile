@@ -17,7 +17,7 @@ json:
 	@echo "building json"
 
 watch:
-	./watch -d . \
+	./watchdir -d . \
 		--when "{,**/}*; !{,**/}*.json" "make js" \
 		--when "{,**/}*.json" "make json" \
 		\

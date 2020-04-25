@@ -1,9 +1,9 @@
 
-## @kilt/watchdir
+## @fs1/watchdir
 
 ### Install
 ``` sh
-npm i -D @kilt/watchdir
+npm i -D @fs1/watchdir
 ```
 
 ### Running CLI
@@ -16,7 +16,7 @@ npx watchdir -d ./src \
 
 ### JavaScript API
 ``` js
-import WatchDir from '@kilt/watchdir'
+import WatchDir from '@fs1/watchdir'
 
 new WatchDir('./src')
   .when('{,**/}* ; !{,**/}*.sass', () => console.log('js files changed') )

@@ -1,6 +1,6 @@
 {
-  "name": "@kilt/watchdir",
-  "version": "0.1.13",
+  "name": "@fs1/watchdir",
+  "version": "0.0.1",
   "description": "Single directory files change watcher",
   "main": "watchdir.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/kiltjs/watchdir.git"
+    "url": "git+ssh://git@github.com/fs1js/watchdir.git"
   },
   "keywords": [
     "watch",
@@ -21,9 +21,9 @@
   "author": "Jesús Germade <jesus@germade.dev>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kiltjs/watchdir/issues"
+    "url": "https://github.com/fs1js/watchdir/issues"
   },
-  "homepage": "https://github.com/kiltjs/watchdir#readme",
+  "homepage": "https://github.com/fs1js/watchdir#readme",
   "dependencies": {
     "chalk": "4.0.0",
     "chokidar": "3.3.1",
