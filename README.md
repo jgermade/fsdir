@@ -1,25 +1,31 @@
 
-## @fsglob/foreach
+## @fsglob/watchdir
 
 ### Install
 ``` sh
-npm i -D @fsglob/foreach
+npm i -D fsdir
 ```
 
 ### Running CLI
+
 ``` sh
-npx foreach\
-  --pattern "{,**/}* ; {,**/}*.sass" "sass ${FILE_}" \
+npx fsdir -d ./src \
+  --each "{,**/}*.sass" "sass ${FILE_PATH} -o ${FILE_DIR}${FILE_NAME}.css"
+```
+
+``` sh
+npx fsdir -d ./src \
+  --when "{,**/}* ; !{,**/}*.sass" "make js" \
   --when "{,**/}*.sass" "make css" \
   --run "echo 'all when detected has finished'"
 ```
 
 ### JavaScript API
+
 ``` js
-import { forEach } from '@fsglob/watchdir'
+import WatchDir from 'fsdir/watchdir'
 
-forEach('{,**/}*.sass')
-
+new WatchDir('./src')
   .when('{,**/}* ; !{,**/}*.sass', () => console.log('js files changed') )
   .when('{,**/}*.sass', () => console.log('sass files changed') )
   .run( () => console.log('all when detected has finished) )
