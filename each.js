@@ -38,7 +38,7 @@ async function matchPatterns(patterns, options = {}) {
 module.exports = {
   matchPatterns,
 
-  async forEach(patterns, options = {}, iteratee) {
+  async each(patterns, options = {}, iteratee) {
     if (options instanceof Function) {
       iteratee = options
       options = {}

@@ -1,14 +1,17 @@
 {
-  "name": "@fsglob/foreach",
+  "name": "fsdir",
   "version": "0.0.1",
   "description": "CLI tool for running commands on reveral files",
   "main": "foreach.js",
+  "bin": {
+    "fsdir": "cli.js"
+  },
   "scripts": {
     "test": "make test"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/fsglob/foreach.git"
+    "url": "git+ssh://git@github.com/jgermade/fsdir.git"
   },
   "keywords": [
     "cli",
@@ -18,10 +21,12 @@
   "author": "Jesús Germade <jesus@germade.es>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fsglob/foreach/issues"
+    "url": "https://github.com/jgermade/fsdir/issues"
   },
-  "homepage": "https://github.com/fsglob/foreach#readme",
+  "homepage": "https://github.com/jgermade/fsdir#readme",
   "dependencies": {
+    "chalk": "^4.0.0",
+    "chokidar": "^3.4.0",
     "glob": "^7.1.6",
     "micromatch": "^4.0.2",
     "yargs": "^15.3.1"

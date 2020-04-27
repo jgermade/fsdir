@@ -12,6 +12,11 @@ async function _reducePromises(promises_list, result) {
   )
 }
 
+function _round(num, decimals) {
+  var _pow = Math.pow(10, decimals)
+  return Math.round(num * _pow) / _pow
+}
+
 module.exports = {
 
   async reducePromises(promises_list) {
@@ -42,10 +47,12 @@ module.exports = {
     const parsed = path.parse(filepath)
 
     return {
-      FILE_DIR: parsed.dir,
       FILE_BASE: parsed.base,
       FILE_NAME: parsed.name,
       FILE_EXT: parsed.ext,
+      FILE_PATH: path.relative(process.cwd(), cwd ? path.resolve(cwd, filepath) : filepath ),
+      FILE_DIR: parsed.dir,
+      FILE_CWDPATH: path.relative(process.cwd(), cwd ? path.resolve(cwd, filepath) : filepath ),
       FILE_CWDDIR: path.relative(process.cwd(), cwd ? path.resolve(cwd, parsed.dir) : parsed.dir) || '.',
       FILE_FULLPATH: cwd
         ? path.resolve(cwd, filepath)
@@ -61,6 +68,11 @@ module.exports = {
       if (options.stdout) cp.stdout.pipe(process.stdout)
       if (options.stderr || options.stdout) cp.stderr.pipe(process.stderr)
     })
+  },
+
+  getmSeconds (time) {
+    if( time > 1000 ) return _round(time/1000, 2) + 's'
+    return _round(time, 2) + 'ms'
   },
 
 }
