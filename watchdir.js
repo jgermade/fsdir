@@ -1,7 +1,7 @@
 
 const chokidar = require('chokidar')
-const { matcher } = require('micromatch')
 
+const { matchFilters } = require('./helpers')
 const Watcher = require('./watcher')
 
 class WatchDir extends Watcher {
@@ -19,7 +19,8 @@ class WatchDir extends Watcher {
   }
 
   when (pattern, cbFn) {
-    var matches = matcher( pattern.split(';').map( (patt) => patt.trim() ) )
+    var matches = matchFilters( pattern.split(';').map( (patt) => patt.trim() ) )
+    
     this.when_queue.push({
       pattern,
       when: (files_changed) => files_changed.some( (file) => matches(file) ),

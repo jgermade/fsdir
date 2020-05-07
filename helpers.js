@@ -2,6 +2,8 @@
 const { exec } = require('child_process')
 const path = require('path')
 
+const minimatch = require('minimatch')
+
 async function _reducePromises(promises_list, result) {
   const next = promises_list.shift()
 
@@ -18,6 +20,29 @@ function _round(num, decimals) {
 }
 
 module.exports = {
+
+  matchFilters (filters) {
+      const _filters = filters.map( (pattern) => {
+          return pattern[0] === '!'
+              ? { exclusion: true, matches: minimatch.filter(pattern.substr(1)) }
+              : { matches: minimatch.filter(pattern) }
+      })
+
+      return (filepath) => {
+        var matched = false
+        
+        _filters.forEach( (_) => {
+          if (_.exclusion ) {
+            if ( matched && _.matches(filepath) ) matched = false
+          } else if (!matched && _.matches(filepath) ) {
+            matched = true
+          }
+            
+        })
+        
+        return matched
+      }
+  },
 
   async reducePromises(promises_list) {
     return await _reducePromises(

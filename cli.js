@@ -60,7 +60,6 @@ async function processDirCommands (argv) {
   const watch_patterns = reducePatterns(argv.watch)
   const afterwatch_patterns = reducePatterns(argv.afterWatch)
   const cwd = argv.dir
-  const absolute_cwd = path.resolve(process.cwd(), cwd)
   
   const each_pattern = each_patterns.map( (pattern) => async () => {
     await each(pattern.pattern, {
@@ -68,7 +67,6 @@ async function processDirCommands (argv) {
     }, async (filepath) => {
       await runCommand(pattern.command, {
         env: Object.assign(Object.create(process.env), getFileENV(filepath, { cwd }) ),
-        cwd: absolute_cwd,
         stdout: argv.stdout,
         stderr: argv.stderr,
       })
@@ -88,7 +86,6 @@ async function processDirCommands (argv) {
     var _start = performance.now()
     argv.verbose && console.log(`\n${magenta('running')} ${command}`)
     await runCommand(command, {
-      cwd: absolute_cwd,
       stdout: argv.stdout,
       stderr: argv.stderr,
     })
@@ -104,6 +101,7 @@ async function processDirCommands (argv) {
   })
 
   argv.verbose && console.log(`\n${yellow('watching')}: ${cwd}`)
+  argv.verbose && watcher.run( () => console.log(`\n${yellow('waiting')}...`) )
 }
 
 processDirCommands(argv)
