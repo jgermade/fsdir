@@ -58,7 +58,6 @@ const { argv } = yargs
 async function processDirCommands (argv) {
   const each_patterns = reducePatterns(argv.each)
   const watch_patterns = reducePatterns(argv.watch)
-  const afterwatch_patterns = reducePatterns(argv.afterWatch)
   const cwd = argv.dir
   
   const each_pattern = each_patterns.map( (pattern) => async () => {
@@ -96,8 +95,8 @@ async function processDirCommands (argv) {
     watcher.when(_watch.pattern, () => _runCommand(_watch.command) )
   })
 
-  afterwatch_patterns.forEach( (_awatch) => {
-    watcher.run( () => _runCommand(_awatch.command) )
+  argv.afterWatch.forEach( (command) => {
+    watcher.run( () => _runCommand(command) )
   })
 
   argv.verbose && console.log(`\n${yellow('watching')}: ${cwd}`)
