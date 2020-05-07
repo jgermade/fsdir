@@ -33,8 +33,7 @@ const { argv } = yargs
     alias: 'p',
     type: 'array',
     nargs: 2,
-    demand: true,
-    // default: [],
+    default: [],
   })
   .option('watch', {
     alias: 'w',
