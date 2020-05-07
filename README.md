@@ -15,9 +15,9 @@ npx fsdir -d ./src \
 
 ``` sh
 npx fsdir -d ./src \
-  --when "{,**/}* ; !{,**/}*.sass" "make js" \
-  --when "{,**/}*.sass" "make css" \
-  --run "echo 'all when detected has finished'"
+  --watch "{,**/}* ; !{,**/}*.sass" "make js" \
+  --watch "{,**/}*.sass" "make css" \
+  --after-watch "echo 'all when detected has finished'"
 ```
 
 ### JavaScript API

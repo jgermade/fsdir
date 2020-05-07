@@ -43,7 +43,7 @@ const { argv } = yargs
   })
   .option('after-watch', {
     type: 'array',
-    nargs: 2,
+    nargs: 1,
     default: [],
   })
   .option('verbose', {
