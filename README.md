@@ -1,5 +1,5 @@
 
-## @fsglob/watchdir
+## fsdir
 
 ### Install
 ``` sh
