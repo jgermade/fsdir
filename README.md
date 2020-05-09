@@ -6,11 +6,9 @@
 npm i -D fsdir
 ```
 
-<details open>
-<summary>
-JavaScript
-</summary>
+### JavaScript
 
+<details open>
 ``` js
 import eachFile from 'fsdir/eachFile'
 
@@ -31,11 +29,8 @@ new WatchDir('./src')
 ```
 </details>
 
+### CLI
 <details open>
-<summary>
-CLI
-</summary>
-
 ``` sh
 npx fsdir -d ./src \
   --each "{,**/}*.sass" "sass ${FILE_PATH} -o ${FILE_DIR}${FILE_NAME}.css"
