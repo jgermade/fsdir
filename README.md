@@ -9,6 +9,7 @@ npm i -D fsdir
 ### JavaScript
 
 <details open>
+  
 ``` js
 import eachFile from 'fsdir/eachFile'
 
@@ -30,6 +31,7 @@ new WatchDir('./src')
 </details>
 
 ### CLI
+
 <details open>
 ``` sh
 npx fsdir -d ./src \
