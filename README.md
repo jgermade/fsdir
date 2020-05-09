@@ -6,9 +6,9 @@
 npm i -D fsdir
 ```
 
-<details>
+<details open>
 <summary>
-### JavaScript
+JavaScript
 </summary>
 
 ``` js
@@ -29,9 +29,12 @@ new WatchDir('./src')
   .run( () => console.log('all when detected has finished) )
 
 ```
-<details>
+</details>
 
-### CLI
+<details open>
+<summary>
+CLI
+</summary>
 
 ``` sh
 npx fsdir -d ./src \
@@ -61,3 +64,4 @@ npx fsdir -d ./src \
 
 Also: `FILE_ROOTPATH` is filepath from system root 
 ```
+</details>
