@@ -6,6 +6,18 @@
 npm i -D fsdir
 ```
 
+### API JavaScript
+
+``` js
+import WatchDir from 'fsdir/watchdir'
+
+new WatchDir('./src')
+  .when('{,**/}* ; !{,**/}*.sass', () => console.log('js files changed') )
+  .when('{,**/}*.sass', () => console.log('sass files changed') )
+  .run( () => console.log('all when detected has finished) )
+
+```
+
 ### Running CLI
 
 ``` sh
@@ -35,16 +47,4 @@ npx fsdir -d ./src \
 └────────────┴────────────────────┴───────────┴──────────┘
 
 Also: `FILE_ROOTPATH` is filepath from system root 
-```
-
-### JavaScript API
-
-``` js
-import WatchDir from 'fsdir/watchdir'
-
-new WatchDir('./src')
-  .when('{,**/}* ; !{,**/}*.sass', () => console.log('js files changed') )
-  .when('{,**/}*.sass', () => console.log('sass files changed') )
-  .run( () => console.log('all when detected has finished) )
-
 ```
