@@ -20,6 +20,7 @@ npx fsdir -d ./src \
   --after-watch "echo 'any watch has matched and all have finished'"
 ```
 
+> These are the environment variables added to each command:
 ``` js
 ┌────────────────────────────────────────────────────────┐
 │                    FILE_CWDPATH                        │

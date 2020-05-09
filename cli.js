@@ -10,44 +10,75 @@ const { each } = require('./each')
 const WatchDir = require('./watchdir')
 
 const { argv } = yargs
+  .wrap(Math.min(yargs.terminalWidth(), 100))
+  .usage(`
+  $0 \\
+    --each '{,**/*.js}' 'echo $FILE_NAME' \\
+    --watch '{,**/*.js}' 'echo "\${FILE_NAME} has changed"'
+
+  Environment variables added to each command:
+
+  ┌────────────────────────────────────────────────────────┐
+  │                    FILE_CWDPATH                        │
+  ├─────────────────────────────────┬──────────────────────┤
+  │          FILE_CWDDIR            │       FILE_BASE      │
+  ├────────────┬────────────────────┴──────────────────────┤
+  │            │                FILE_PATH                  │
+  │  FILE_CWD  ├────────────────────┬───────────┬──────────┤
+  │            │      FILE_DIR      │ FILE_NAME │ FILE_EXT │
+  │            │                    │           │          │
+  "     src    /   component/styles / component     .css   "
+  └────────────┴────────────────────┴───────────┴──────────┘
+
+  Also: \`FILE_ROOTPATH\` is filepath from system root 
+  `)
   .option('dir', {
     alias: 'd',
     type: 'string',
     default: '.',
+    description: 'directory to be watched',
   })
   .option('stdout', {
     type: 'boolean',
     default: true,
+    description: 'print commands stdout',
   })
   .option('stderr', {
     type: 'boolean',
     default: true,
-  })
-  .option('concurrent', {
-    alias: 'c',
-    type: 'boolean',
-    nargs: 0,
+    description: 'print commands stderr',
   })
   .option('each', {
     alias: 'p',
     type: 'array',
     nargs: 2,
     default: [],
+    description: "'<pattern>' '<command>'",
   })
   .option('watch', {
     alias: 'w',
     type: 'array',
     nargs: 2,
     default: [],
+    // eslint-disable-next-line no-template-curly-in-string
+    description: "'<pattern>' '<command>'",
   })
   .option('after-watch', {
     type: 'array',
     nargs: 1,
     default: [],
+    description: "'<command>'",
   })
   .option('debounce-watch', {
     type: 'boolean',
     default: false,
+    description: 'if true, watch command will be executed in groups between executions, this is the only case when variables are not being injected',
+  })
+  .option('concurrent', {
+    alias: 'c',
+    type: 'boolean',
+    nargs: 0,
+    description: 'runs each/watch commands concurrently',
   })
   .option('verbose', {
     alias: 'v',
