@@ -5,7 +5,6 @@ const { matchFilters } = require('./helpers')
 const Watcher = require('./watcher')
 
 class WatchDir extends Watcher {
-
   constructor (cwd = '.', options = {}) {
     if (typeof cwd === 'object') {
       options = cwd
@@ -19,35 +18,44 @@ class WatchDir extends Watcher {
   }
 
   when (pattern, cbFn) {
-    var matches = matchFilters( pattern.split(';').map( (patt) => patt.trim() ) )
-    
+    var matches = matchFilters(pattern.split(';').map((patt) => patt.trim()))
+
     this.when_queue.push({
       pattern,
-      when: (files_changed) => files_changed.some( (file) => matches(file) ),
+      when: (filesChanged) => filesChanged.some((filepath) => matches(filepath)),
       cbFn,
     })
   }
 
   watch (cwd) {
-    cwd = cwd || this.cwd
-    const { files_changed } = this
+    const _self = this
+    const { debounceWatch } = _self.options
+    const filesChanged = []
+    cwd = cwd || _self.cwd
+
+    function _processFiles () {
+      if (!filesChanged.length) return
+
+      _self.process(
+        debounceWatch
+          ? filesChanged.splice(0)
+          : [filesChanged.shift()]
+      )
+        .then(_processFiles)
+        .catch(console.error) // eslint-disable-line no-console
+    }
 
     chokidar
       .watch('.', {
-        cwd: cwd,
+        cwd,
         ignoreInitial: true,
       })
       .on('all', (_event, path) => {
-        if (files_changed.indexOf(path) === -1) {
-          files_changed.push(path)
-        }
+        if (!filesChanged.includes(path)) filesChanged.push(path)
 
-        this
-          .process(files_changed)
-          .catch(console.error)
+        _processFiles()
       })
   }
-
 }
 
 module.exports = WatchDir

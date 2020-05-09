@@ -10,6 +10,9 @@ ifndef NPM_VERSION
   export NPM_VERSION=patch
 endif
 
+lint:
+	eslint .
+
 publish:
 	git pull origin $(git_branch) --tags
 	npm version ${NPM_VERSION}

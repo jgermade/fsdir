@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const yargs = require('yargs')
-const path = require('path')
 const { performance } = require('perf_hooks')
 
 const { yellow, cyan, magenta, black } = require('chalk')
@@ -46,6 +45,10 @@ const { argv } = yargs
     nargs: 1,
     default: [],
   })
+  .option('debounce-watch', {
+    type: 'boolean',
+    default: false,
+  })
   .option('verbose', {
     alias: 'v',
     type: 'boolean',
@@ -54,53 +57,73 @@ const { argv } = yargs
     default: true,
   })
 
-
 async function processDirCommands (argv) {
-  const each_patterns = reducePatterns(argv.each)
-  const watch_patterns = reducePatterns(argv.watch)
+  const eachPatterns = reducePatterns(argv.each)
+  const watchPatterns = reducePatterns(argv.watch)
   const cwd = argv.dir
-  
-  const each_pattern = each_patterns.map( (pattern) => async () => {
-    await each(pattern.pattern, {
-      cwd,
-    }, async (filepath) => {
-      await runCommand(pattern.command, {
-        env: Object.assign(Object.create(process.env), getFileENV(filepath, { cwd }) ),
-        stdout: argv.stdout,
-        stderr: argv.stderr,
-      })
-    })
-  })
+  const { debounceWatch } = argv
 
-  await ( argv.concurrent
-    ? Promise.all( each_pattern.map( (run) => run() ) )
-    : reducePromises(each_pattern)
+  const eachPattern = eachPatterns.map(
+    (pattern) => async () => {
+      await each(pattern.pattern, {
+        cwd,
+      }, async (filepath) => {
+        await runCommand(pattern.command, {
+          env: getFileENV(filepath, { cwd }),
+          stdout: argv.stdout,
+          stderr: argv.stderr,
+        })
+      })
+    }
   )
 
-  if (!watch_patterns.length && !afterwatch_patterns.length) return
+  await (argv.concurrent
+    ? Promise.all(eachPattern.map(
+      (run) => run())
+    )
+    : reducePromises(eachPattern)
+  )
 
-  const watcher = new WatchDir(cwd)
+  if (!watchPatterns.length) return
 
-  async function _runCommand (command) {
+  const watcher = new WatchDir(cwd, { debounceWatch })
+
+  async function _runCommand (command, env = process.env) {
     var _start = performance.now()
+    // eslint-disable-next-line no-console
     argv.verbose && console.log(`\n${magenta('running')} ${command}`)
     await runCommand(command, {
+      env,
       stdout: argv.stdout,
       stderr: argv.stderr,
     })
-    argv.verbose && console.log(`${cyan('finished')} ${command} ${black(getmSeconds(performance.now() - _start))}`)
+      .catch(console.error) // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    argv.verbose && console.log(`${cyan('finished')} ${black(getmSeconds(performance.now() - _start))}`)
   }
 
-  watch_patterns.forEach( (_watch) => {
-    watcher.when(_watch.pattern, () => _runCommand(_watch.command) )
+  watchPatterns.forEach(
+    (_watch) => {
+      watcher.when(
+        _watch.pattern,
+        (filepath) => _runCommand(
+          _watch.command,
+          getFileENV(filepath[0], { cwd })
+        )
+      )
+    }
+  )
+
+  argv.afterWatch.forEach((command) => {
+    watcher.run(() => _runCommand(command))
   })
 
-  argv.afterWatch.forEach( (command) => {
-    watcher.run( () => _runCommand(command) )
-  })
-
+  /* eslint-disable no-console */
   argv.verbose && console.log(`\n${yellow('watching')}: ${cwd}`)
-  argv.verbose && watcher.run( () => console.log(`\n${yellow('waiting')}...`) )
+  argv.verbose && watcher.run(() => {
+    console.log(`\n${yellow('waiting')}...`)
+  })
+  /* eslint-enable no-console */
 }
 
 processDirCommands(argv)

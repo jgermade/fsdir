@@ -15,9 +15,25 @@ npx fsdir -d ./src \
 
 ``` sh
 npx fsdir -d ./src \
-  --watch "{,**/}* ; !{,**/}*.sass" "make js" \
+  --watch "{,**/}* ; !{,**/}*.sass" "file ${FILE_PATH} has changed" \
   --watch "{,**/}*.sass" "make css" \
-  --after-watch "echo 'all when detected has finished'"
+  --after-watch "echo 'any watch has matched and all have finished'"
+```
+
+``` js
+┌────────────────────────────────────────────────────────┐
+│                    FILE_CWDPATH                        │
+├─────────────────────────────────┬──────────────────────┤
+│          FILE_CWDDIR            │       FILE_BASE      │
+├────────────┬────────────────────┴──────────────────────┤
+│            │                FILE_PATH                  │
+│  FILE_CWD  ├────────────────────┬───────────┬──────────┤
+│            │      FILE_DIR      │ FILE_NAME │ FILE_EXT │
+│            │                    │           │          │
+"     src    /   component/styles / component     .css   "
+└────────────┴────────────────────┴───────────┴──────────┘
+
+Also: `FILE_ROOTPATH` is filepath from system root 
 ```
 
 ### JavaScript API
