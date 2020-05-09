@@ -6,10 +6,10 @@
 npm i -D fsdir
 ```
 
-### JavaScript
-
 <details open>
-<summary></summary>
+<summary>
+### JavaScript
+</summary>
   
 ``` js
 import eachFile from 'fsdir/eachFile'
