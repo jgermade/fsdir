@@ -6,8 +6,9 @@ const { performance } = require('perf_hooks')
 const { yellow, cyan, magenta, black } = require('chalk')
 
 const { reducePatterns, reducePromises, runCommand, getFileENV, getmSeconds } = require('./helpers')
-const { each } = require('./each')
-const WatchDir = require('./watchdir')
+
+const each = require('./eachFile')
+const WatchDir = require('./WatchDir')
 
 const { argv } = yargs
   .wrap(Math.min(yargs.terminalWidth(), 100))

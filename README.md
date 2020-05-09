@@ -6,19 +6,32 @@
 npm i -D fsdir
 ```
 
-### API JavaScript
+<details>
+<summary>
+### JavaScript
+</summary>
 
 ``` js
-import WatchDir from 'fsdir/watchdir'
+import eachFile from 'fsdir/eachFile'
 
-new WatchDir('./src')
-  .when('{,**/}* ; !{,**/}*.sass', () => console.log('js files changed') )
-  .when('{,**/}*.sass', () => console.log('sass files changed') )
-  .run( () => console.log('all when detected has finished) )
+eachFile('{,**/}* ; !{,**/}*.sass', (filepath) => console.log(`found file: ${filepath}`) )
+
+eachFile(['{,**/}*', '!{,**/}*.sass'], (filepath) => console.log(`found file: ${filepath}`) )
 
 ```
 
-### Running CLI
+``` js
+import WatchDir from 'fsdir/WatchDir'
+
+new WatchDir('./src')
+  .when('{,**/}* ; !{,**/}*.sass', (filepath) => console.log(`${filepath} file has changed`) )
+  .when('{,**/}*.sass', (filepath) => console.log('sass files changed') )
+  .run( () => console.log('all when detected has finished) )
+
+```
+<details>
+
+### CLI
 
 ``` sh
 npx fsdir -d ./src \
@@ -27,9 +40,9 @@ npx fsdir -d ./src \
 
 ``` sh
 npx fsdir -d ./src \
-  --watch "{,**/}* ; !{,**/}*.sass" "file ${FILE_PATH} has changed" \
-  --watch "{,**/}*.sass" "make css" \
-  --after-watch "echo 'any watch has matched and all have finished'"
+  --watch '{,**/}* ; !{,**/}*.sass' 'echo "file ${FILE_PATH} has changed"' \
+  --watch '{,**/}*.sass' 'make css' \
+  --after-watch 'echo "any watch has matched and all have finished"'
 ```
 
 > These are the environment variables injected to each command:
