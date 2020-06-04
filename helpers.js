@@ -1,9 +1,7 @@
 
 const path = require('path')
-const { promisify } = require('util')
 const { exec } = require('child_process')
 
-const glob = require('glob')
 const minimatch = require('minimatch')
 
 async function _reducePromises (promisesList, result) {
@@ -22,44 +20,7 @@ function _round (num, decimals) {
   return Math.round(num * _pow) / _pow
 }
 
-const execGlob = promisify(glob)
-
-async function _matchPatterns (patterns, options, matchedFiles = []) {
-  const pattern = patterns.shift()
-
-  if (!pattern) return matchedFiles
-
-  if (/^!/.test(pattern)) {
-    const excludeFiles = minimatch.filter(pattern)
-
-    return await _matchPatterns(
-      patterns,
-      options,
-      matchedFiles.filter(excludeFiles)
-    )
-  }
-
-  const _matchedFiles = await execGlob(pattern, options)
-
-  _matchedFiles.forEach(
-    (filepath) => {
-      if (!matchedFiles.includes(filepath)) matchedFiles.push(filepath)
-    }
-  )
-
-  return await _matchPatterns(patterns, options, matchedFiles)
-}
-
-async function matchPatterns (patterns, options = {}) {
-  if (typeof patterns === 'string') patterns = patterns.split(/ *; */)
-  if (patterns instanceof Array === false) throw new TypeError('pattern should be a String or an Array')
-
-  return await _matchPatterns(patterns, options)
-}
-
 module.exports = {
-
-  matchPatterns,
 
   async reducePromises (promisesList) {
     return await _reducePromises(

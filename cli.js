@@ -7,7 +7,7 @@ const { yellow, cyan, magenta, black } = require('chalk')
 
 const { reducePatterns, reducePromises, runCommand, getFileENV, getmSeconds } = require('./helpers')
 
-const each = require('./eachFile')
+const { eachFile } = require('./eachFile')
 const WatchDir = require('./WatchDir')
 
 const { argv } = yargs
@@ -97,7 +97,7 @@ async function processDirCommands (argv) {
 
   const eachPattern = eachPatterns.map(
     (pattern) => async () => {
-      await each(pattern.pattern, {
+      await eachFile(pattern.pattern, {
         cwd,
       }, async (filepath) => {
         await runCommand(pattern.command, {
