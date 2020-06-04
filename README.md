@@ -9,7 +9,7 @@ npm i -D fsdir
 ### JavaScript
   
 ``` js
-import eachFile from 'fsdir/eachFile'
+import { eachFile } from 'fsdir/eachFile'
 
 eachFile('{,**/}* ; !{,**/}*.sass', (filepath) => console.log(`found file: ${filepath}`) )
 
