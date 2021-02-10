@@ -1,6 +1,6 @@
 {
   "name": "fsdir",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "CLI tool for running commands on reveral files",
   "main": "foreach.js",
   "bin": {
