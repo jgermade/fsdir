@@ -11,9 +11,13 @@ npm i -D fsdir
 ``` js
 import { eachFile } from 'fsdir/eachFile'
 
-eachFile('{,**/}* ; !{,**/}*.sass', (filepath) => console.log(`found file: ${filepath}`) )
+eachFile('{,**/}* ; !{,**/}*.sass', filepath => {
+  console.log(`found file: ${filepath}`)
+})
 
-eachFile(['{,**/}*', '!{,**/}*.sass'], (filepath) => console.log(`found file: ${filepath}`) )
+eachFile(['{,**/}*', '!{,**/}*.sass'], filepath => {
+  console.log(`found file: ${filepath}`)
+})
 
 ```
 
@@ -21,9 +25,15 @@ eachFile(['{,**/}*', '!{,**/}*.sass'], (filepath) => console.log(`found file: ${
 import WatchDir from 'fsdir/WatchDir'
 
 new WatchDir('./src')
-  .when('{,**/}* ; !{,**/}*.sass', (filepath) => console.log(`${filepath} file has changed`) )
-  .when('{,**/}*.sass', (filepath) => console.log('sass files changed') )
-  .run( () => console.log('all when detected has finished') )
+  .when('{,**/}* ; !{,**/}*.sass', filepath => {
+    console.log(`${filepath} file has changed`)
+  })
+  .when('{,**/}*.sass', filepath => {
+    console.log('sass files changed')
+  })
+  .run(() => {
+    console.log('all when detected has finished')
+  })
 
 ```
 
@@ -32,7 +42,7 @@ new WatchDir('./src')
 
 ``` sh
 npx fsdir -d ./src \
-  --each "{,**/}*.sass" "sass ${FILE_PATH} -o ${FILE_DIR}${FILE_NAME}.css"
+  --each '{,**/}*.sass' 'sass ${FILE_PATH} -o ${FILE_DIR}${FILE_NAME}.css'
 ```
 
 ``` sh
