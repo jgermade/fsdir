@@ -23,7 +23,7 @@ import WatchDir from 'fsdir/WatchDir'
 new WatchDir('./src')
   .when('{,**/}* ; !{,**/}*.sass', (filepath) => console.log(`${filepath} file has changed`) )
   .when('{,**/}*.sass', (filepath) => console.log('sass files changed') )
-  .run( () => console.log('all when detected has finished) )
+  .run( () => console.log('all when detected has finished') )
 
 ```
 
