@@ -84,10 +84,7 @@ module.exports = {
       FILE_BASE: parsed.base,
       FILE_NAME: parsed.name,
       FILE_EXT: parsed.ext,
-      FILE_PATH: path.relative(
-        process.cwd(),
-        cwd ? path.resolve(cwd, filepath) : filepath
-      ),
+      FILE_PATH: filepath,
       FILE_DIR: parsed.dir,
       FILE_CWD: cwd || '.',
       FILE_CWDPATH: path.relative(
