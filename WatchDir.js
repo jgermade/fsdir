@@ -2,7 +2,7 @@
 const chokidar = require('chokidar')
 
 const { matchFilters } = require('./helpers')
-const Watcher = require('./watcher')
+const Watcher = require('./Watcher')
 
 class WatchDir extends Watcher {
   constructor (cwd = '.', options = {}) {
