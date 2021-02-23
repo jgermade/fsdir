@@ -42,9 +42,33 @@ module.exports = {
   extends: [
     'standard',
   ],
-  // parser: '@babel/eslint-parser',
   rules: custom_rules,
   overrides: [
+    {
+      files: ['{,**/}*.ts'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: './tsconfig.json'
+      },
+      extends: [
+        'standard-with-typescript',
+      ],
+      plugins: [
+        '@typescript-eslint',
+      ],
+      rules: {
+        ...custom_rules,
+        '@typescript-eslint/naming-convention': [
+          'error',
+          {
+            selector: 'variable',
+            types: ['boolean'],
+            format: ['snake_case'],
+            // format: ['snake_case', 'camelCase', 'PascalCase'],
+          },
+        ],
+      },
+    },
     {
       files: ['{,**/}*.spec.js'],
       env: { jest: true },

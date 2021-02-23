@@ -10,6 +10,12 @@
     "editor.formatOnSave": true,
     "editor.detectIndentation": false,
   },
+  "[typescript]": {
+    "editor.rulers": [ 120 ],
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": true,
+    "editor.detectIndentation": false,
+  },
   "[makefile]": {
     "editor.insertSpaces": false,
     "editor.tabSize": 4
