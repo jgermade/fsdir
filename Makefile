@@ -14,6 +14,9 @@ ifndef NPM_VERSION
   export NPM_VERSION=patch
 endif
 
+lint:
+	eslint 'src/{,**/}*.{js,ts}'
+
 bundle: src/*.ts
 	for file in $^ ; do \
 		echo "bundling: $${file}"; \
@@ -30,9 +33,7 @@ typescript.declarations:
 		--esModuleInterop
 
 build: bundle typescript.declarations
-
-lint:
-	eslint .
+	cp package.json dist
 
 publish:
 	git pull origin $(git_branch) --tags

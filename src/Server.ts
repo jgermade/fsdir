@@ -46,8 +46,14 @@ class Server {
     })
   }
 
-  listen (host: string, post: number) {
-    
+  async listen (host: string, port: number): Promise<void> {
+    return await new Promise((resolve, reject) => {
+      this.server(port, host, (err: any) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        if (err) reject(err)
+        else resolve()
+      })
+    })
   }
 }
 
