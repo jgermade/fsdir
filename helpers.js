@@ -106,12 +106,12 @@ module.exports = {
     return new Promise(function (resolve, reject) {
       const cp = exec(command, {
         env: options.env
-          ? Object.assign(
-            Object.create(process.env),
-            options.env
-          )
+          ? {
+            ...process.env,
+            ...options.env,
+          }
           : (options.orphan_env || process.env),
-      }, (err, stdout, stderr) => {
+      }, (err, _stdout, _stderr) => {
         if (err) reject(err)
         resolve()
       })

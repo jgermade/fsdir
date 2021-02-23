@@ -7,7 +7,7 @@ import { URL } from 'url'
 import { cwdPath } from './fsfile'
 
 interface ServerOptions {
-  root_dir: null|string
+  root_dir: string
   try_files?: Array<string|number>
   error_404?: null|string
 }
@@ -17,9 +17,9 @@ class Server {
 
   constructor (options: ServerOptions) {
     const {
-      root_dir,
-      try_files = ['index.html', 404],
-      error_404 = null,
+      root_dir = '.',
+      // try_files = ['index.html', 404],
+      // error_404 = null,
     } = options
 
     const cwd = process.cwd()
@@ -31,7 +31,7 @@ class Server {
       if (typeof req.url !== 'string') throw new TypeError('req.url should be a string')
       const url = new URL(req.url)
 
-      var readStream = fs.createReadStream(cwdPath([cwd, url.pathname]))
+      var readStream = fs.createReadStream(cwdPath([cwd, root_dir, url.pathname]))
 
       // This will wait until we know the readable stream is actually valid before piping
       readStream.on('open', function () {
