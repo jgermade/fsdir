@@ -2,7 +2,7 @@
 
 const yargs = require('yargs')
 
-const files_cmd = require('./cli/files.cli')
+const files_cmd = require('./files.cli')
 
 // eslint-disable-next-line no-unused-expressions
 yargs

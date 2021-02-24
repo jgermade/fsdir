@@ -1,7 +1,7 @@
 
 import { makeRe } from 'minimatch'
 
-export function matchFilters (filters: [string]): Function {
+export function matchFilters (filters: string[]): Function {
   const _filters = filters.map(
     pattern => {
       return pattern[0] === '!'
@@ -19,8 +19,8 @@ export function matchFilters (filters: [string]): Function {
     _filters.forEach(_ => {
       const { exclusion = false, re } = _
       if (exclusion) {
-        if (matched && re.test(file_path) === true) matched = false
-      } else if (!matched && re.test(file_path) === true) {
+        if (matched && re.test(file_path)) matched = false
+      } else if (!matched && re.test(file_path)) {
         matched = true
       }
     })

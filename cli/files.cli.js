@@ -3,7 +3,7 @@ const { performance } = require('perf_hooks')
 
 const { yellow, cyan, magenta, black } = require('chalk')
 
-const { reducePatterns, reducePromises, runCommand, getFileENV, getmSeconds } = require('../helpers')
+const { reducePatterns, reducePromises, runCommand, getFileENV, getmSeconds } = require('./helpers')
 
 const { eachFile } = require('../eachFile')
 const WatchDir = require('../WatchDir')

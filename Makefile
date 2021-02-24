@@ -1,7 +1,7 @@
 #!make
 SHELL := env PATH=$(shell npm bin):$(PATH) /bin/bash
 
-.PHONY: watch
+.PHONY: watch dist
 .SILENT:
 
 git_branch := $(shell git rev-parse --abbrev-ref HEAD)
@@ -17,7 +17,8 @@ endif
 lint:
 	eslint 'src/{,**/}*.{js,ts}'
 
-bundle: src/*.ts
+transpile: src/**/*.ts
+transpile: src/*.ts
 	for file in $^ ; do \
 		echo "bundling: $${file}"; \
 		esbuild $${file} --outdir=dist \
@@ -32,8 +33,13 @@ typescript.declarations:
 		--emitDeclarationOnly \
 		--esModuleInterop
 
-build: bundle typescript.declarations
+dist:
+	mkdir -p dist
+	$(MAKE) transpile
+	cp -r cli dist
 	cp package.json dist
+
+build: dist typescript.declarations
 
 publish:
 	git pull origin $(git_branch) --tags
