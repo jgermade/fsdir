@@ -63,7 +63,7 @@ module.exports = {
           {
             selector: 'variable',
             types: ['boolean'],
-            format: ['snake_case'],
+            format: ['snake_case', 'camelCase'],
             // format: ['snake_case', 'camelCase', 'PascalCase'],
           },
         ],

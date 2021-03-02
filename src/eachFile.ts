@@ -7,38 +7,41 @@ import { reducePromises } from './helpers/async.helpers'
 
 const execGlob = promisify(glob)
 
-export async function matchFiles (patterns: string|string[], options?: object, matchedFiles: string[] = []): Promise<string[]> {
-  if (typeof patterns === 'string') return await matchFiles(patterns.split(/ *; */), options, matchedFiles)
-  const pattern = patterns.shift()
+export async function _matchFilesReducer (patterns: string[], options?: object, i: number = 0, matchedFiles: string[] = []): Promise<string[]> {
+  const pattern = patterns[i]
 
   if (pattern === undefined) return matchedFiles
 
   if (/^!/.test(pattern)) {
     const excludeFiles = minimatch.filter(pattern)
 
-    return await matchFiles(
+    return await _matchFilesReducer(
       patterns,
       options,
+      i + 1,
       matchedFiles.filter(excludeFiles)
     )
   }
 
   const _matchedFiles = await execGlob(pattern, options)
 
-  _matchedFiles.forEach(
-    (file_path) => {
-      if (!matchedFiles.includes(file_path)) matchedFiles.push(file_path)
-    }
-  )
+  _matchedFiles.forEach(file_path => {
+    if (!matchedFiles.includes(file_path)) matchedFiles.push(file_path)
+  })
 
-  return await matchFiles(patterns, options, matchedFiles)
+  return await _matchFilesReducer(patterns, options, i + 1, matchedFiles)
+}
+
+export async function matchFiles (patterns: string|string[], options?: object): Promise<string[]> {
+  if (typeof patterns === 'string') return await _matchFilesReducer(patterns.split(/ *; */), options)
+  return await _matchFilesReducer(patterns, options)
 }
 
 interface EachFileOptions {
   concurrent?: boolean
 }
 
-export async function eachFile (patterns: string[], iteratee: Function, options: EachFileOptions = {}): Promise<any> {
+export async function eachFile (patterns: string|string[], iteratee: Function, options: EachFileOptions = {}): Promise<any> {
   const matchedFiles = await matchFiles(patterns, options)
 
   if (options.concurrent === true) {

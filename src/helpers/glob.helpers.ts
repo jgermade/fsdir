@@ -1,7 +1,9 @@
 
 import { makeRe } from 'minimatch'
 
-export function matchFilters (filters: string[]): Function {
+export function matchFilter (filters: string|string[]): Function {
+  if (typeof filters === 'string') return matchFilter(filters.trim().split(/ *; */))
+
   const _filters = filters.map(
     pattern => {
       return pattern[0] === '!'
@@ -13,7 +15,7 @@ export function matchFilters (filters: string[]): Function {
     }
   )
 
-  return (file_path: string) => {
+  return (file_path: string): boolean => {
     var matched = false
     
     _filters.forEach(_ => {

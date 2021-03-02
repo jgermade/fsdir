@@ -11,7 +11,7 @@ interface RunQueue {
   cbFn: Function
 }
 
-class Watcher {
+export class Watcher {
   // options
   when_queue: WhenQueue[] = []
   run_queue: RunQueue[] = []
@@ -35,13 +35,13 @@ class Watcher {
   }
 
   // eslint-disable-next-line @typescript-eslint/promise-function-async
-  process (): Promise<any> {
+  process (...args: any[]): Promise<any> {
     if (this.processing_changes) return Promise.resolve()
 
     // const _this = this
-    const _args = arguments
+    // const _args = arguments
 
-    const queue = this.when_queue.filter(_ => _.when.apply(this, _args))
+    const queue = this.when_queue.filter(_ => _.when.apply(this, args))
     
     if (queue.length > 0) arrayPush.apply(queue, this.run_queue)
 
@@ -49,7 +49,7 @@ class Watcher {
     return reducePromises(
       queue.map(_ => ({
         run () {
-          _.cbFn?.apply(this, _args)
+          _.cbFn?.apply(this, args)
         }
       }))
     )

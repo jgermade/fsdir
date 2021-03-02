@@ -12,7 +12,7 @@ interface ServerOptions {
   error_404?: null|string
 }
 
-class Server {
+export class Server {
   private readonly server: any
 
   constructor (options: ServerOptions) {
