@@ -14,15 +14,30 @@ ifndef NPM_VERSION
   export NPM_VERSION=patch
 endif
 
-lint:
+node_modules:; npm install
+install:; npm install
+i: install
+
+lint: node_modules
 	eslint 'src/{,**/}*.{js,ts}'
+
+unit-tests: node_modules
+	jest
+
+test: lint unit-tests
 
 transpile: src/**/*.ts
 transpile: src/*.ts
+	$(MAKE) node_modules
+
 	for file in $^ ; do \
-		echo "bundling: $${file}"; \
-		esbuild $${file} --outdir=dist \
-			--format=cjs; \
+		if [[ ! $$file =~ .spec.ts$$ ]]; then \
+			_file="$${file//src\//}"; \
+			echo "bundling: $${file} -> dist/$${_file%.*}.js"; \
+			esbuild $${file} --outfile=dist/$${_file%.*}.js --format=cjs --target=node10; \
+			echo "bundling: $${file} -> dist/$${_file%.*}.es6"; \
+			esbuild $${file} --outfile=dist/$${_file%.*}.es6 --format=esm --target=es2020; \
+		fi \
 	done
 
 typescript.declarations:
